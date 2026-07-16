@@ -1,0 +1,14 @@
+{
+  "$schema": "https://skills.sh/schemas/skills.sh.schema.json",
+  "notGrouped": "bottom",
+  "groupings": [
+    {
+      "title": "Provider migrations",
+      "description": "Skills for safe, verified transfers between SaaS providers.",
+      "skills": [
+        "hyperping-to-openstatus",
+        "cal-com-to-google-appointment-schedules"
+      ]
+    }
+  ]
+}
