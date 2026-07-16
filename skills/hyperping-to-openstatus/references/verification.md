@@ -1,5 +1,13 @@
 # Verification and rollback checklist
 
+## Access and key preflight
+
+- [ ] A dedicated Hyperping project key can read the selected source project; it has no broader source-write permission unless an approved source edit needs it.
+- [ ] An OpenStatus token created from **Settings → API Tokens** can read the intended destination page and is authorized for the planned target mutations.
+- [ ] **OPENSTATUS_PAGE_ID** identifies the approved target page, and optional **HYPERPING_STATUS_PAGE_IDS** values identify only the intended source pages.
+- [ ] The history helper completes a dry run with the expected source inventory and no unmapped components before any --apply attempt.
+- [ ] Keys, full export files, headers, and token values are absent from the repository, ledger, reconciliation report, and captured command output.
+
 ## Inventory
 
 - [ ] Source and destination monitor counts match after approved exclusions.

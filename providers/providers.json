@@ -49,6 +49,20 @@
       "domains": ["mobile-live-updates"],
       "methods": ["browser", "cli", "repo"],
       "documentation": ["https://capawesome.io/docs/cloud/live-updates/setup/"]
+    },
+    {
+      "id": "plausible-analytics",
+      "name": "Plausible Analytics",
+      "domains": ["web-analytics"],
+      "methods": ["api", "browser", "repo"],
+      "documentation": ["https://plausible.io/docs/export-stats"]
+    },
+    {
+      "id": "datafast",
+      "name": "DataFast",
+      "domains": ["web-analytics"],
+      "methods": ["api", "browser", "cli", "repo"],
+      "documentation": ["https://datafa.st/docs/import-from-plausible", "https://datafa.st/docs/cli-introduction"]
     }
   ]
 }

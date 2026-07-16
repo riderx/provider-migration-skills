@@ -1,11 +1,11 @@
 ---
 name: hyperping-to-openstatus
-description: Migrate Hyperping HTTP monitors, status-page configuration, public incident timelines, and maintenance windows to OpenStatus with read-back reconciliation, public latency verification, and reversible cutover. Use when moving monitoring or status pages from Hyperping to OpenStatus.
+description: Migrate Hyperping HTTP monitors, status-page configuration, public incident timelines, and maintenance windows to OpenStatus with explicit API-key setup, read-back reconciliation, public latency verification, and reversible cutover. Use when moving monitoring or status pages from Hyperping to OpenStatus.
 license: MIT
-compatibility: Requires authenticated access to both providers and permission to create monitors, status-page components, status reports, and maintenance windows. Network access required. Never store credentials in repository files.
+compatibility: Requires authenticated access to both providers and permission to create monitors, status-page components, status reports, and maintenance windows. The API-driven path requires a Hyperping project key and an OpenStatus API token. Network access required. Never store credentials in repository files.
 metadata:
   author: provider-migration-skills
-  version: "1.1.0"
+  version: "1.2.0"
 ---
 
 # Hyperping to OpenStatus
@@ -27,6 +27,18 @@ Deliver a reconciliation report containing:
 - the agreed soak period and rollback procedure.
 
 Do not delete the Hyperping source, revoke credentials, or silently change alert behavior before the report is accepted.
+
+## 0. Create access and API keys
+
+Create dedicated runtime credentials before collecting data. Do not put values in the migration repository, a committed .env file, a ledger, a ticket, or command output.
+
+1. In the source Hyperping project, open **Project settings → Developers** and create a named API key. A read-only key is enough for inventory and the history helper; create a Read & Write key only if the approved plan includes a source-side change. Hyperping shows a newly created key once, so put it straight into an approved secret manager or the current shell session.
+2. In the OpenStatus workspace, open **Settings → API Tokens** and create an API token for the destination workflow. This token is needed to create/read target monitors, status reports, and maintenance windows through the API.
+3. Read the intended OpenStatus page and record its stable ID as **OPENSTATUS_PAGE_ID**. If automatic source-page name matching is ambiguous, also record the selected source page IDs as the optional **HYPERPING_STATUS_PAGE_IDS** value.
+4. Supply the helper's three runtime values only through an approved secret-injection mechanism: **HYPERPING_API_KEY**, **OPENSTATUS_API_KEY**, and **OPENSTATUS_PAGE_ID**. Values must never be copied into source control or the redacted reconciliation report.
+5. Run the history helper in dry-run mode from its directory before any write. It must be able to read the source inventory and the exact target page, and its output must show no unmapped component before --apply is considered.
+
+See [the primary-source notes](references/source-notes.md) for the current provider key-creation and API documentation. If a token is missing, expired, bound to the wrong project, or unable to read the selected target page, stop instead of substituting another workspace or broadening permissions.
 
 ## 1. Preflight and snapshot
 

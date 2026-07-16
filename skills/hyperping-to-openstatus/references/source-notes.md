@@ -2,6 +2,11 @@
 
 Use these links to refresh live provider behavior before a migration. They support the field map but do not replace target read-back.
 
+## Authentication and API keys
+
+- [Hyperping API authentication](https://hyperping.com/docs/api/authentication) documents creating a project key in **Project settings → Developers**, its read-only and Read & Write modes, and bearer authentication.
+- [OpenStatus API](https://www.openstatus.dev/tooling/api) documents generating a token in **Settings → API Tokens**, the **x-openstatus-key** header, and the target resources available through the API.
+
 ## Monitoring and page configuration
 
 - [Hyperping monitor creation](https://hyperping.com/docs/monitoring/create-monitor) documents cadence, regions, request settings, and expected-response configuration.

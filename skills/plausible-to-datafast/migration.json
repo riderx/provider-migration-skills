@@ -1,0 +1,90 @@
+{
+  "version": 1,
+  "skill": "plausible-to-datafast",
+  "source": "plausible-analytics",
+  "target": "datafast",
+  "summary": "Plausible full-export history import, future tracker migration, and explicit treatment of custom-goal, privacy, dashboard, and account boundaries.",
+  "capabilities": [
+    {
+      "id": "historical-core-analytics",
+      "status": "supported",
+      "source_method": "browser",
+      "target_method": "browser",
+      "apply": "human",
+      "verification": ["source-inventory", "target-readback", "public-surface", "rollback-plan"],
+      "notes": "DataFast documents importing Plausible's full site-settings Export Data ZIP for pageviews, visitors, referrers, devices, location, UTM campaigns, bounce rate, and session duration. Require a new or owner-approved empty target, or ledger proof that the export checksum has not been applied there; never re-upload after ambiguous completion. Keep the protected source ZIP and compare fixed date ranges after import."
+    },
+    {
+      "id": "tracker-installation",
+      "status": "supported",
+      "source_method": "repo",
+      "target_method": "repo",
+      "apply": "agent",
+      "verification": ["target-readback", "public-surface", "ci", "rollback-plan"],
+      "notes": "Replace repository-owned tracking markup only after the target website, root domain, proxy/CSP, and consent behavior are approved; verify a real pageview during parallel running."
+    },
+    {
+      "id": "custom-events-and-goals",
+      "status": "manual",
+      "source_method": "browser",
+      "target_method": "repo",
+      "apply": "agent",
+      "verification": ["source-inventory", "target-readback", "public-surface", "rollback-plan"],
+      "notes": "Inspect source goals in the Plausible dashboard and source instrumentation in the repository/CMS/GTM. Rebuild each event and goal from a reviewed mapping ledger; target limits and source-only callback, pageview, automated-measurement, and revenue semantics need explicit decisions."
+    },
+    {
+      "id": "historical-custom-event-and-goal-data",
+      "status": "unsupported",
+      "source_method": "browser",
+      "target_method": "none",
+      "apply": "none",
+      "verification": ["source-inventory", "rollback-plan"],
+      "notes": "The documented DataFast importer requires Plausible custom events and goals to be reconfigured; it does not establish a historical event/goal-data import path."
+    },
+    {
+      "id": "dashboards-shared-links-segments-and-funnels",
+      "status": "manual",
+      "source_method": "browser",
+      "target_method": "browser",
+      "apply": "human",
+      "verification": ["target-readback", "external-user", "rollback-plan"],
+      "notes": "Recreate only approved target views, shared links, segments, and funnels after reviewing their semantics; no documented cross-provider importer warrants an automatic copy."
+    },
+    {
+      "id": "team-access-and-billing",
+      "status": "manual",
+      "source_method": "browser",
+      "target_method": "browser",
+      "apply": "human",
+      "verification": ["target-readback", "rollback-plan"],
+      "notes": "Invite users, assign roles, and choose billing only with owner approval; do not copy access or subscription state between providers."
+    },
+    {
+      "id": "revenue-and-payment-attribution",
+      "status": "manual",
+      "source_method": "browser",
+      "target_method": "browser",
+      "apply": "human",
+      "verification": ["target-readback", "external-user", "rollback-plan"],
+      "notes": "Review revenue goals and payment integrations independently. The documented importer does not promise historical revenue-goal transfer."
+    },
+    {
+      "id": "privacy-consent-and-domain-topology",
+      "status": "manual",
+      "source_method": "repo",
+      "target_method": "repo",
+      "apply": "human",
+      "verification": ["public-surface", "external-user", "rollback-plan"],
+      "notes": "Cookie/cookieless behavior, consent, subdomain and cross-domain design, CSP, and proxy choices are legal/product decisions that must be approved before tracker code changes."
+    },
+    {
+      "id": "optional-api-baselines",
+      "status": "manual",
+      "source_method": "api",
+      "target_method": "api",
+      "apply": "agent",
+      "verification": ["source-inventory", "target-readback"],
+      "notes": "Plausible Stats API and a scoped DataFast dft_ token restricted to the target website with analytics:read can automate baseline/read-back comparisons. They are optional and plan/permission dependent; reserve a df_ website key for a genuine website-key operation rather than read-only comparison."
+    }
+  ]
+}
