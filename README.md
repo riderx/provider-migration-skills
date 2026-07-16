@@ -8,8 +8,16 @@ Each skill follows the same safety contract: capture the source inventory, norma
 
 | Skill | Covers |
 | --- | --- |
-| [hyperping-to-openstatus](skills/hyperping-to-openstatus/SKILL.md) | HTTP monitors, monitor assertions, regions, cadence, status pages, public monitor visibility, and latency charts. |
+| [hyperping-to-openstatus](skills/hyperping-to-openstatus/SKILL.md) | HTTP monitors, monitor assertions, regions, cadence, status pages, public monitor visibility, and response-time charts. |
 | [cal-com-to-google-appointment-schedules](skills/cal-com-to-google-appointment-schedules/SKILL.md) | Booking event types, availability, booking links and embeds, Google Appointment Schedules, and a reversible cutover. |
+| [ionic-appflow-to-capgo](skills/ionic-appflow-to-capgo/SKILL.md) | Ionic Appflow Live Updates SDK/configuration, update strategies, deployment automation, and a new-native-binary cutover to Capgo. |
+| [capawesome-cloud-to-capgo-live-updates](skills/capawesome-cloud-to-capgo-live-updates/SKILL.md) | Capawesome Cloud Live Updates SDK/configuration, channel/rollout decisions, CI uploads, and device-level verification in Capgo. |
+
+## Evidence-informed migration model
+
+The [evidence ledger](research/ai-assisted-provider-migrations.md) records public, source-labelled examples of AI-assisted provider and platform migrations. It informs the controls used here; it does not imply that any provider pair is automatic or equivalent.
+
+The recurring successful pattern is deliberately conservative: human-owned scope and rollback decisions; AI-assisted inventory, mapping, mechanical code/configuration work, and comparison; read-back against the target; and a real-user or real-device validation gate before cutover.
 
 ## Install
 
@@ -19,6 +27,8 @@ The [Skills CLI](https://www.skills.sh/docs/cli) is the standard installer. Repl
 npx skills add riderx/provider-migration-skills --list
 npx skills add riderx/provider-migration-skills --skill hyperping-to-openstatus
 npx skills add riderx/provider-migration-skills --skill cal-com-to-google-appointment-schedules
+npx skills add riderx/provider-migration-skills --skill ionic-appflow-to-capgo
+npx skills add riderx/provider-migration-skills --skill capawesome-cloud-to-capgo-live-updates
 ~~~
 
 For a non-interactive global Codex install:
@@ -42,23 +52,37 @@ The skills never ask agents to commit credentials, personal data, booking record
 ## Repository layout
 
 ~~~text
+providers/
+  providers.json       # canonical provider IDs, access methods, primary docs
 skills/
   <provider-pair>/
-    SKILL.md          # concise activation instructions
-    references/       # focused field maps and verification checklists
+    SKILL.md           # concise activation instructions
+    migration.json     # machine-readable capability contract
+    references/        # focused field maps and verification checklists
+research/
+  ai-assisted-provider-migrations.md # source-labelled public evidence ledger
 scripts/
+  build-migration-matrix.mjs # produces the committed capability matrix
   validate-skills.mjs # dependency-free repository validation
+MIGRATION-MATRIX.md   # generated supported/manual/unsupported capability map
 ~~~
 
 This uses the Agent Skills SKILL.md format, progressive disclosure, and a skills.sh.json grouping file, following the structure used by the [Vercel Agent Skills collection](https://github.com/vercel-labs/agent-skills). See the [Agent Skills best practices](https://agentskills.io/skill-creation/best-practices) before adding a new provider pair.
 
+## Provider-pair contracts
+
+Every provider pair has a `migration.json` contract. It declares each capability as `supported`, `manual`, `unsupported`, or `not-applicable`, plus the source and target access path (`api`, `browser`, `cli`, `repo`, `manual`, or `none`), who may apply it, and how to verify it.
+
+The generated [migration matrix](MIGRATION-MATRIX.md) lets an agent or maintainer see what can move, what requires a human/browser session, and what must stay behind before it starts a migration. Read [ARCHITECTURE.md](ARCHITECTURE.md) to add a provider or pair without inventing a new schema.
+
 ## Validate
 
 ~~~sh
+node scripts/build-migration-matrix.mjs --check
 node scripts/validate-skills.mjs
 ~~~
 
-The validator checks required frontmatter, directory/name agreement, description quality constraints, and obvious credential-shaped strings. It is intentionally lightweight; review provider-specific safety and behavior manually.
+The validator checks required frontmatter, provider IDs, capability contracts, matrix freshness, description quality constraints, and obvious credential-shaped strings. It is intentionally lightweight; review provider-specific safety and behavior manually.
 
 ## Contribute a provider transfer
 

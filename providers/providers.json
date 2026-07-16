@@ -1,0 +1,54 @@
+{
+  "version": 1,
+  "providers": [
+    {
+      "id": "hyperping",
+      "name": "Hyperping",
+      "domains": ["monitoring", "status-pages"],
+      "methods": ["api", "browser"],
+      "documentation": ["https://hyperping.com/docs/monitoring"]
+    },
+    {
+      "id": "openstatus",
+      "name": "OpenStatus",
+      "domains": ["monitoring", "status-pages"],
+      "methods": ["api", "browser"],
+      "documentation": ["https://www.openstatus.dev/docs/reference/http-monitor"]
+    },
+    {
+      "id": "cal-com",
+      "name": "Cal.com",
+      "domains": ["scheduling"],
+      "methods": ["api", "browser", "repo"],
+      "documentation": ["https://cal.com/docs/api-reference/v2/event-types/get-all-event-types"]
+    },
+    {
+      "id": "google-appointment-schedules",
+      "name": "Google Appointment Schedules",
+      "domains": ["scheduling"],
+      "methods": ["browser", "repo"],
+      "documentation": ["https://support.google.com/calendar/answer/10729749?hl=en"]
+    },
+    {
+      "id": "ionic-appflow",
+      "name": "Ionic Appflow Live Updates",
+      "domains": ["mobile-live-updates"],
+      "methods": ["browser", "cli", "repo"],
+      "documentation": ["https://ionic.io/docs/appflow/deploy/setup/capacitor-sdk"]
+    },
+    {
+      "id": "capgo",
+      "name": "Capgo",
+      "domains": ["mobile-live-updates"],
+      "methods": ["api", "browser", "cli", "repo"],
+      "documentation": ["https://capgo.app/docs/"]
+    },
+    {
+      "id": "capawesome-cloud",
+      "name": "Capawesome Cloud Live Updates",
+      "domains": ["mobile-live-updates"],
+      "methods": ["browser", "cli", "repo"],
+      "documentation": ["https://capawesome.io/docs/cloud/live-updates/setup/"]
+    }
+  ]
+}

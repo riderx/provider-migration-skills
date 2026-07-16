@@ -16,4 +16,5 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+      - run: node scripts/build-migration-matrix.mjs --check
       - run: node scripts/validate-skills.mjs

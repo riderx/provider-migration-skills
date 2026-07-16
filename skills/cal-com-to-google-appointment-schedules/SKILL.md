@@ -41,7 +41,7 @@ For each Cal.com event type, record:
 - routing, round robin, workflows, payments, webhooks, integrations, and embeds;
 - all locations where the link is published: website, email templates, CRM sequences, docs, social bios, QR codes, support macros, and custom domains.
 
-Make a stable source event-type ID to target schedule/link table. Use [the compatibility map](references/compatibility-map.md), [the referrer audit](references/referrer-audit.md), and [the cutover checklist](references/cutover-checklist.md).
+Make a stable source event-type ID to target schedule/link table. Use [the compatibility map](references/compatibility-map.md), [the referrer audit](references/referrer-audit.md), [the cutover checklist](references/cutover-checklist.md), and [the primary-source notes](references/source-notes.md).
 
 ## 3. Map before creating
 

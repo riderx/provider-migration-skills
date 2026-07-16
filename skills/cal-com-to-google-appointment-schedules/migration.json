@@ -1,0 +1,54 @@
+{
+  "version": 1,
+  "skill": "cal-com-to-google-appointment-schedules",
+  "source": "cal-com",
+  "target": "google-appointment-schedules",
+  "summary": "Booking-surface migration with per-event compatibility decisions, real booking verification, and referrer cutover.",
+  "capabilities": [
+    {
+      "id": "event-types-and-availability",
+      "status": "manual",
+      "source_method": "api",
+      "target_method": "browser",
+      "apply": "human",
+      "verification": ["target-readback", "external-user", "rollback-plan"],
+      "notes": "Recreate the schedule in Google only after an explicit field-level mapping for availability, calendar, duration, buffers, and booking limits."
+    },
+    {
+      "id": "repository-links-and-embeds",
+      "status": "supported",
+      "source_method": "repo",
+      "target_method": "repo",
+      "apply": "agent",
+      "verification": ["public-surface", "rollback-plan"],
+      "notes": "Repository-owned URLs and embeds can be updated mechanically after the Google schedule passes an unauthenticated test booking."
+    },
+    {
+      "id": "external-referrers",
+      "status": "manual",
+      "source_method": "browser",
+      "target_method": "browser",
+      "apply": "human",
+      "verification": ["public-surface", "rollback-plan"],
+      "notes": "CRM, email, QR, social, and custom-domain surfaces require an owner-controlled referrer audit and cutover."
+    },
+    {
+      "id": "existing-bookings",
+      "status": "unsupported",
+      "source_method": "api",
+      "target_method": "none",
+      "apply": "none",
+      "verification": ["source-inventory", "rollback-plan"],
+      "notes": "Keep existing bookings on Cal.com unless a separately tested record-migration path is approved."
+    },
+    {
+      "id": "routing-payments-workflows-webhooks",
+      "status": "manual",
+      "source_method": "api",
+      "target_method": "browser",
+      "apply": "human",
+      "verification": ["external-user", "rollback-plan"],
+      "notes": "Team routing, payments, notifications, workflows, and webhooks need a deliberate replacement design rather than an implied equivalent."
+    }
+  ]
+}

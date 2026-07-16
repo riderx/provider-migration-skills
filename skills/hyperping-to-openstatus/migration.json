@@ -1,0 +1,54 @@
+{
+  "version": 1,
+  "skill": "hyperping-to-openstatus",
+  "source": "hyperping",
+  "target": "openstatus",
+  "summary": "HTTP monitoring and public status-page migration with exact assertions, component mappings, and response-time visibility.",
+  "capabilities": [
+    {
+      "id": "http-monitors",
+      "status": "supported",
+      "source_method": "api",
+      "target_method": "api",
+      "apply": "agent",
+      "verification": ["source-inventory", "target-readback", "health-check", "rollback-plan"],
+      "notes": "Preserve the complete request, cadence, regions, active state, redirects, retries, timeout, and assertion semantics."
+    },
+    {
+      "id": "status-page-components",
+      "status": "supported",
+      "source_method": "api",
+      "target_method": "api",
+      "apply": "agent",
+      "verification": ["target-readback", "public-surface", "rollback-plan"],
+      "notes": "Map source groups and cards to destination monitor IDs; do not infer a component relationship from similar names."
+    },
+    {
+      "id": "public-response-time",
+      "status": "supported",
+      "source_method": "api",
+      "target_method": "api",
+      "apply": "agent",
+      "verification": ["target-readback", "public-surface"],
+      "notes": "Public monitor visibility and public response-time views require separate verification after enough check intervals."
+    },
+    {
+      "id": "monitor-history",
+      "status": "unsupported",
+      "source_method": "browser",
+      "target_method": "none",
+      "apply": "none",
+      "verification": ["source-inventory", "rollback-plan"],
+      "notes": "Archive source history separately; this skill has no warranted historical-data import path."
+    },
+    {
+      "id": "alerting-integrations",
+      "status": "manual",
+      "source_method": "browser",
+      "target_method": "browser",
+      "apply": "human",
+      "verification": ["notification-test", "rollback-plan"],
+      "notes": "Reauthorize and test provider-specific notification endpoints instead of copying credentials or silently changing routing."
+    }
+  ]
+}

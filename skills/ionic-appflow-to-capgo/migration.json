@@ -1,0 +1,63 @@
+{
+  "version": 1,
+  "skill": "ionic-appflow-to-capgo",
+  "source": "ionic-appflow",
+  "target": "capgo",
+  "summary": "Live-update runtime, configuration, delivery, and cutover migration from Ionic Appflow to Capgo.",
+  "capabilities": [
+    {
+      "id": "live-update-sdk-and-runtime",
+      "status": "supported",
+      "source_method": "repo",
+      "target_method": "repo",
+      "apply": "agent",
+      "verification": ["ci", "device", "rollback-plan"],
+      "notes": "Replace the updater package and synchronize native projects; a new Capgo-enabled native binary is mandatory."
+    },
+    {
+      "id": "update-strategies-and-custom-calls",
+      "status": "supported",
+      "source_method": "repo",
+      "target_method": "repo",
+      "apply": "agent",
+      "verification": ["device", "rollback-plan"],
+      "notes": "Map automatic and custom update behavior deliberately, including readiness, resume, and forced-update flows."
+    },
+    {
+      "id": "channels-and-version-targeting",
+      "status": "manual",
+      "source_method": "browser",
+      "target_method": "browser",
+      "apply": "human",
+      "verification": ["target-readback", "device", "rollback-plan"],
+      "notes": "Create and approve a source-channel to target-channel/native-version compatibility map before delivery."
+    },
+    {
+      "id": "deployment-ci",
+      "status": "supported",
+      "source_method": "repo",
+      "target_method": "repo",
+      "apply": "agent",
+      "verification": ["ci", "target-readback", "rollback-plan"],
+      "notes": "Retain the CI provider and replace only the bundle delivery step using approved runtime credentials."
+    },
+    {
+      "id": "bundle-history-and-analytics",
+      "status": "unsupported",
+      "source_method": "browser",
+      "target_method": "none",
+      "apply": "none",
+      "verification": ["source-inventory", "rollback-plan"],
+      "notes": "Archive source history separately; no historical bundle or analytics import is implied by this skill."
+    },
+    {
+      "id": "native-build-signing-and-store-release",
+      "status": "manual",
+      "source_method": "browser",
+      "target_method": "browser",
+      "apply": "human",
+      "verification": ["device", "rollback-plan"],
+      "notes": "A new native release and normal signing/distribution approval are required, but credentials are never copied by the skill."
+    }
+  ]
+}

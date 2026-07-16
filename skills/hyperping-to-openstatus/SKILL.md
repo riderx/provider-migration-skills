@@ -37,7 +37,7 @@ Do not delete the Hyperping source, revoke credentials, or silently change alert
 
 For every source monitor, record URL, HTTP method, headers, body, expected status, body/keyword assertion, timeout, retry policy, redirect behavior, cadence, complete region set, enabled state, public visibility, alerting, and status-page grouping.
 
-Use [the field mapping](references/field-mapping.md) to make unsupported behavior explicit. Never silently omit it.
+Use [the field mapping](references/field-mapping.md) and [the primary-source notes](references/source-notes.md) to make unsupported behavior explicit. Never silently omit it.
 
 Treat body assertions as literal strings unless the destination explicitly supports semantic parsing. Test whitespace, line endings, quoting, and JSON formatting against a real response before creating the monitor.
 

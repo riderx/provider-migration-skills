@@ -1,0 +1,63 @@
+{
+  "version": 1,
+  "skill": "capawesome-cloud-to-capgo-live-updates",
+  "source": "capawesome-cloud",
+  "target": "capgo",
+  "summary": "Live-update runtime, configuration, delivery, and binary-adoption migration from Capawesome Cloud to Capgo.",
+  "capabilities": [
+    {
+      "id": "live-update-sdk-and-runtime",
+      "status": "supported",
+      "source_method": "repo",
+      "target_method": "repo",
+      "apply": "agent",
+      "verification": ["ci", "device", "rollback-plan"],
+      "notes": "Replace the updater package and synchronize native projects; a new Capgo-enabled binary is mandatory."
+    },
+    {
+      "id": "custom-update-api-calls",
+      "status": "supported",
+      "source_method": "repo",
+      "target_method": "repo",
+      "apply": "agent",
+      "verification": ["device", "rollback-plan"],
+      "notes": "Translate fetch, download, next-bundle, reload, and diagnostics only when the app intentionally uses them."
+    },
+    {
+      "id": "channels-rollouts-and-version-targeting",
+      "status": "manual",
+      "source_method": "browser",
+      "target_method": "browser",
+      "apply": "human",
+      "verification": ["target-readback", "device", "rollback-plan"],
+      "notes": "Approve explicit channel, rollout, and native-version boundaries before enabling target delivery."
+    },
+    {
+      "id": "deployment-ci",
+      "status": "supported",
+      "source_method": "repo",
+      "target_method": "repo",
+      "apply": "agent",
+      "verification": ["ci", "target-readback", "rollback-plan"],
+      "notes": "Keep the CI provider and replace only the bundle-delivery step with approved runtime credentials."
+    },
+    {
+      "id": "bundle-analytics-and-device-history",
+      "status": "unsupported",
+      "source_method": "browser",
+      "target_method": "none",
+      "apply": "none",
+      "verification": ["source-inventory", "rollback-plan"],
+      "notes": "Archive source records separately; this skill does not promise historical data import."
+    },
+    {
+      "id": "signing-and-store-credentials",
+      "status": "manual",
+      "source_method": "browser",
+      "target_method": "browser",
+      "apply": "human",
+      "verification": ["device", "rollback-plan"],
+      "notes": "Use normal human-owned signing and store-release processes; do not extract or copy credentials."
+    }
+  ]
+}
