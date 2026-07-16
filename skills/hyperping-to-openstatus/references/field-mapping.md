@@ -18,6 +18,19 @@ Confirm the current provider documentation and actual API response shapes before
 | Status-page group/card | Component linked to monitor ID | Maintain an ID map and read the page back. Do not map cards by similar names. |
 | Alerts/integrations | Provider-specific | Audit separately. Record any unsupported routing or notification behavior before cutover. |
 
+## Status-page subscribers
+
+| Hyperping source | OpenStatus target | Migration rule |
+| --- | --- | --- |
+| Email subscriber returned by the source page API | Vendor-managed email subscription | Require status-page-owner approval. The target creation route activates the recipient without another confirmation. |
+| “All components except X” | Explicit componentIds allowlist | Resolve X to every target child component, then send every remaining page-component ID. An empty array means the entire page. |
+| Source subscriber page | pageId | Map the exact source page to the approved target page. Do not use a matching name alone. |
+| Source email address | emailChannel.email | Normalize and deduplicate case-insensitively. Do not expose addresses in reports or commit them to the migration repository. |
+| Active target duplicate | Existing target row | Skip it after confirming its component scope. Do not create a duplicate on retry. |
+| Target unsubscribed row | Target opt-out | Preserve it. Do not reactivate without fresh owner approval. |
+| Source SMS, Slack, Teams, webhook, or other channel | No automatic email conversion | Report the count and re-enroll supported destinations separately with authorization. |
+| Create response component IDs | Scope evidence | Require an exact match to the planned allowlist before continuing. If REST list responses omit component IDs, use the authenticated subscriber dashboard for read-back. |
+
 ## Public incident and maintenance history
 
 | Hyperping source | OpenStatus target | Migration rule |

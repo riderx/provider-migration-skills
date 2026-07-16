@@ -23,6 +23,18 @@
 - [ ] URL, method, headers, body, assertions, timeout, retry, redirects, cadence, regions, active state, and public state match the approved plan.
 - [ ] Assertions were checked against a real response, including whitespace-sensitive body values.
 
+## Subscribers
+
+- [ ] The status-page owner explicitly authorized each destination subscription and the immediate activation behavior was accepted.
+- [ ] All source subscriber types were inventoried; only approved source email records entered the transfer plan.
+- [ ] The source email list was paginated to completion, normalized, and deduplicated without being stored in the repository or report.
+- [ ] Target active and unsubscribed rows were snapshotted before writes; existing active duplicates were skipped and target opt-outs were preserved.
+- [ ] Every exclusion group was expanded to its child components, and every new subscription used the full non-empty eligible component allowlist.
+- [ ] Each create response matched the planned target page, active/vendor state, and exact component IDs before the next write.
+- [ ] Final source and target normalized email sets match, with a final source re-scan after the batch.
+- [ ] Authenticated OpenStatus dashboard read-back shows each migrated row with the intended component count; REST ListSubscribers was not treated as scope proof when it omitted component IDs.
+- [ ] Rollback removes only subscriptions created by this migration and leaves the source subscriptions intact until cutover approval.
+
 ## History
 
 - [ ] Each imported status report is attached to the intended status page and exact page-component IDs.

@@ -15,6 +15,12 @@ Use these links to refresh live provider behavior before a migration. They suppo
 - [OpenStatus page components reference](https://www.openstatus.dev/docs/reference/page-components) documents linking status-page components to monitors.
 - [OpenStatus latency versus response time](https://www.openstatus.dev/docs/concept/latency-vs-response-time) distinguishes the public response-time data expected by this skill from broader network latency.
 
+## Status-page subscribers
+
+- [Hyperping subscriber list](https://hyperping.com/docs/api/statuspages/subscribers/list) documents GET /v2/statuspages/{uuid}/subscribers, the subscriber type filter, and pagination.
+- [OpenStatus subscriber reference](https://www.openstatus.dev/docs/reference/subscriber) documents operator-managed creation, subscriber-initiated double opt-in, component scope, and unsubscribe behavior.
+- [OpenStatus public OpenAPI](https://api.openstatus.dev/openapi.yaml) documents CreatePageSubscription, ListSubscribers, and the request rule that an empty componentIds value means the whole page. Verify live response behavior before relying on ListSubscribers for scoped read-back.
+
 ## Public incident and maintenance history
 
 - [Hyperping incident list](https://hyperping.com/docs/api/incidents/list) documents `GET /v3/incidents`, source IDs, localized titles, affected components, status pages, and update timelines.

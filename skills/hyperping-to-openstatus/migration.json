@@ -3,7 +3,7 @@
   "skill": "hyperping-to-openstatus",
   "source": "hyperping",
   "target": "openstatus",
-  "summary": "HTTP monitoring, public status-page configuration, incident timelines, and scheduled maintenance with exact assertions, component mappings, and response-time visibility.",
+  "summary": "HTTP monitoring, public status-page configuration, consented email subscriptions, incident timelines, and scheduled maintenance with exact assertions, component mappings, and response-time visibility.",
   "capabilities": [
     {
       "id": "http-monitors",
@@ -22,6 +22,24 @@
       "apply": "agent",
       "verification": ["target-readback", "public-surface", "rollback-plan"],
       "notes": "Map source groups and cards to destination monitor IDs; do not infer a component relationship from similar names."
+    },
+    {
+      "id": "email-status-page-subscribers",
+      "status": "supported",
+      "source_method": "api",
+      "target_method": "api",
+      "apply": "agent",
+      "verification": ["source-inventory", "owner-approval", "target-readback", "scope-exclusion", "rollback-plan"],
+      "notes": "Migrate only source email records with explicit owner authorization. CreatePageSubscription skips recipient verification, so use a full non-empty component allowlist; an empty list means the whole page. Preserve target opt-outs and verify existing/migrated scope in the authenticated dashboard when REST componentIds are absent."
+    },
+    {
+      "id": "non-email-status-page-subscribers",
+      "status": "unsupported",
+      "source_method": "api",
+      "target_method": "none",
+      "apply": "none",
+      "verification": ["source-inventory", "manual-reenrollment"],
+      "notes": "Do not convert Hyperping SMS, Slack, Teams, webhook, or other subscriber channels into email. Re-enroll supported destination channels separately with the recipient or endpoint owner's authorization."
     },
     {
       "id": "public-response-time",

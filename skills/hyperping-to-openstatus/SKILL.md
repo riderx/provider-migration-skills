@@ -1,11 +1,11 @@
 ---
 name: hyperping-to-openstatus
-description: Migrate Hyperping HTTP monitors, status-page configuration, public incident timelines, and maintenance windows to OpenStatus with explicit API-key setup, read-back reconciliation, public latency verification, and reversible cutover. Use when moving monitoring or status pages from Hyperping to OpenStatus.
+description: Migrate Hyperping HTTP monitors, status-page configuration, consented email subscribers, public incident timelines, and maintenance windows to OpenStatus with explicit API-key setup, read-back reconciliation, component-scoped notification verification, public latency verification, and reversible cutover. Use when moving monitoring or status pages from Hyperping to OpenStatus.
 license: MIT
-compatibility: Requires authenticated access to both providers and permission to create monitors, status-page components, status reports, and maintenance windows. The API-driven path requires a Hyperping project key and an OpenStatus API token. Network access required. Never store credentials in repository files.
+compatibility: Requires authenticated access to both providers and permission to create monitors, status-page components, consented email subscriptions, status reports, and maintenance windows. The API-driven path requires a Hyperping project key and an OpenStatus API token. Network access required. Never store credentials in repository files.
 metadata:
   author: provider-migration-skills
-  version: "1.2.0"
+  version: "1.3.0"
 ---
 
 # Hyperping to OpenStatus
@@ -20,6 +20,7 @@ Deliver a reconciliation report containing:
 - the full configuration diff and every unsupported field;
 - source and destination inventory counts and unmatched entries;
 - status-page component/group mappings;
+- source and destination email-subscriber counts, explicit component allowlists/exclusions, and opt-out decisions;
 - source incident IDs mapped to destination status-report IDs, including update counts and timestamp ranges;
 - source maintenance IDs mapped to destination IDs, including schedule and component scope;
 - status-history fidelity gaps, including synthesized text or any source timestamp that could not be used chronologically;
@@ -32,8 +33,8 @@ Do not delete the Hyperping source, revoke credentials, or silently change alert
 
 Create dedicated runtime credentials before collecting data. Do not put values in the migration repository, a committed .env file, a ledger, a ticket, or command output.
 
-1. In the source Hyperping project, open **Project settings → Developers** and create a named API key. A read-only key is enough for inventory and the history helper; create a Read & Write key only if the approved plan includes a source-side change. Hyperping shows a newly created key once, so put it straight into an approved secret manager or the current shell session.
-2. In the OpenStatus workspace, open **Settings → API Tokens** and create an API token for the destination workflow. This token is needed to create/read target monitors, status reports, and maintenance windows through the API.
+1. In the source Hyperping project, open **Project settings → Developers** and create a named API key. A read-only key is enough for inventory, history, and subscriber reads; create a Read & Write key only if the approved plan includes a source-side change. Hyperping shows a newly created key once, so put it straight into an approved secret manager or the current shell session.
+2. In the OpenStatus workspace, open **Settings → API Tokens** and create an API token for the destination workflow. This token is needed to create/read target monitors, page subscriptions, status reports, and maintenance windows through the API.
 3. Read the intended OpenStatus page and record its stable ID as **OPENSTATUS_PAGE_ID**. If automatic source-page name matching is ambiguous, also record the selected source page IDs as the optional **HYPERPING_STATUS_PAGE_IDS** value.
 4. Supply the helper's three runtime values only through an approved secret-injection mechanism: **HYPERPING_API_KEY**, **OPENSTATUS_API_KEY**, and **OPENSTATUS_PAGE_ID**. Values must never be copied into source control or the redacted reconciliation report.
 5. Run the history helper in dry-run mode from its directory before any write. It must be able to read the source inventory and the exact target page, and its output must show no unmapped component before --apply is considered.
@@ -44,10 +45,10 @@ See [the primary-source notes](references/source-notes.md) for the current provi
 
 1. Confirm the source and target workspaces, intended target page, source retention period, desired cadence, regions, and which monitors should expose public latency.
 2. Check the OpenStatus plan and current API/dashboard capabilities before creating anything. Required cadence or multi-region checks can be plan-limited.
-3. Fetch complete Hyperping monitor, status-page, incident, and maintenance inventories. Fetch complete OpenStatus monitor, page, status-report, and maintenance inventories too.
+3. Fetch complete Hyperping monitor, status-page, incident, maintenance, and subscriber inventories. Fetch complete OpenStatus monitor, page, subscriber, status-report, and maintenance inventories too.
 4. Resolve source service IDs to exact destination page-component IDs. Do not attach an event to a similar-looking component.
 5. Store a redacted local ledger outside the skill repository. It must map each source incident or maintenance ID to its target ID before retries.
-6. Stop if the target history is non-empty without a matching ledger, if a source component is unmapped, or if a target cannot preserve the required page scope and timestamp.
+6. Obtain explicit owner approval before creating any recipient subscription. Stop if the target history is non-empty without a matching ledger, if a source component is unmapped, if a recipient previously opted out on the target, or if a target cannot preserve the required page scope and timestamp.
 
 OpenStatus automatic monitor incidents are internal detection records. Hyperping public incidents must migrate as OpenStatus status reports; see [the field mapping](references/field-mapping.md).
 
@@ -56,6 +57,8 @@ OpenStatus automatic monitor incidents are internal detection records. Hyperping
 For every source monitor, record URL, HTTP method, headers, body, expected status, body/keyword assertion, timeout, retry policy, redirect behavior, cadence, complete region set, enabled state, public visibility, alerting, and status-page grouping.
 
 For every public-history record, record title, source page, affected source components, title/message locale chosen for the target, all update timestamps/messages/phases, and maintenance start/end timestamps.
+
+For every subscriber migration, record the source page, source type, normalized destination, target active/opt-out state, and the exact destination component allowlist. Expand an excluded component group into every child component ID. Never use an empty OpenStatus componentIds array: it means the entire page.
 
 Use [the field mapping](references/field-mapping.md) and [the primary-source notes](references/source-notes.md) to make unsupported behavior explicit. Never silently omit it.
 
@@ -75,6 +78,8 @@ Map Hyperping `investigating`, `identified`, `monitoring`, and `resolved` direct
 
 For maintenance, require `from < to`, resolve the exact component IDs, set notifications off, and plan to fold source maintenance-update text into the target maintenance message. OpenStatus has no maintenance-update timeline API.
 
+For subscriber transfer, show the source email count, every non-email type count, existing target active and opted-out counts, the excluded groups/components, and every allowed component ID. Deduplicate normalized email addresses. Do not silently reactivate an OpenStatus opt-out or convert another channel into email.
+
 ## 4. Apply safely
 
 1. Create one destination monitor using the complete normalized configuration.
@@ -89,14 +94,36 @@ The included [`migrate-status-history.mjs`](scripts/migrate-status-history.mjs) 
 
 See [the verification checklist](references/verification.md) for the required read-back gates.
 
-## 5. Wire the status page
+## 5. Migrate consented email subscribers
+
+Use this only when the status-page owner explicitly authorizes the transfer. CreatePageSubscription is a vendor-managed route: it activates the destination immediately without the recipient confirming again.
+
+1. List every source status-page subscriber type. For email, paginate Hyperping's subscriber endpoint until hasNextPage is false and use only the source records returned for that type. Report SMS, Slack, Teams, webhook, or other channel counts separately; do not coerce them into email subscriptions.
+2. Resolve the target page's component groups and components. Turn exclusions such as “all but China” into an explicit allowlist of every eligible component ID. A group is not itself a target subscription scope; exclude all of its child components too.
+3. Snapshot OpenStatus subscribers with includeUnsubscribed: true. Skip target active duplicates. Do not reactivate a prior target opt-out without new owner approval, and stop if an existing subscription has the wrong scope.
+4. For each planned email, call CreatePageSubscription with the approved page ID and the full non-empty allowlist:
+
+   ~~~json
+   {
+     "pageId": "OPENSTATUS_PAGE_ID",
+     "componentIds": ["every eligible component ID"],
+     "emailChannel": { "email": "subscriber@example.com" }
+   }
+   ~~~
+
+   Capture the create response before advancing. It must be active, vendor-created, and scoped to exactly the planned component IDs.
+5. Re-scan Hyperping after the batch to catch arrivals during migration. Reconcile normalized source and target email sets without putting recipient addresses in the report.
+6. Verify scope through the authenticated OpenStatus subscriber dashboard for every migrated row. It must show the approved component count, which must equal the allowlist count. Some current REST ListSubscribers responses omit component joins and return componentIds: []; do not interpret that response as page-wide scope or use it as the only scope proof.
+7. Roll back only the newly created target subscriptions if scope, consent, or reconciliation fails. Preserve source subscriptions until the approved cutover is complete.
+
+## 6. Wire the status page
 
 1. Create or update page metadata only after the mapped monitors pass their read-back comparison.
 2. Maintain an explicit page group/component to destination monitor ID table.
 3. Attach only the intended public components, then fetch the page and compare its component list with the plan.
 4. Verify the public page as an unauthenticated visitor. A 200 response alone does not prove the correct components, reports, and maintenance history are displayed.
 
-## 6. Verify public latency separately
+## 7. Verify public latency separately
 
 OpenStatus status-home health and latency visibility are different features. Response-time charts are on /monitors and monitor detail pages, not necessarily on the status-page home.
 
@@ -111,7 +138,7 @@ For every monitor intended to show public latency, confirm all of the following 
 
 Do not use deprecated display settings as a proxy for public latency. Make the relevant monitor public and verify the actual monitor views.
 
-## 7. Cut over and retain rollback
+## 8. Cut over and retain rollback
 
 Keep Hyperping live during the agreed soak period. Disable or detach destination components to roll back; do not destroy data as a first rollback action. Replace status-page links and alert destinations only after the inventory, timeline, configuration, and public-view gates pass.
 
