@@ -3,7 +3,7 @@
   "skill": "hyperping-to-openstatus",
   "source": "hyperping",
   "target": "openstatus",
-  "summary": "HTTP monitoring and public status-page migration with exact assertions, component mappings, and response-time visibility.",
+  "summary": "HTTP monitoring, public status-page configuration, incident timelines, and scheduled maintenance with exact assertions, component mappings, and response-time visibility.",
   "capabilities": [
     {
       "id": "http-monitors",
@@ -33,13 +33,40 @@
       "notes": "Public monitor visibility and public response-time views require separate verification after enough check intervals."
     },
     {
+      "id": "incident-history",
+      "status": "supported",
+      "source_method": "api",
+      "target_method": "api",
+      "apply": "agent",
+      "verification": ["source-inventory", "target-readback", "public-surface", "rollback-plan"],
+      "notes": "Map Hyperping public incidents to OpenStatus status reports, not automatic monitor incidents. Preserve the earliest real timeline timestamp and component scope."
+    },
+    {
+      "id": "incident-updates",
+      "status": "supported",
+      "source_method": "api",
+      "target_method": "api",
+      "apply": "agent",
+      "verification": ["source-inventory", "target-readback", "public-surface"],
+      "notes": "Replay updates chronologically with notifications disabled. Hyperping update entries without a phase carry the latest known target phase."
+    },
+    {
+      "id": "maintenance-windows",
+      "status": "supported",
+      "source_method": "api",
+      "target_method": "api",
+      "apply": "agent",
+      "verification": ["source-inventory", "target-readback", "public-surface", "rollback-plan"],
+      "notes": "Preserve title, schedule, component scope, and message. The target derives maintenance state from its schedule and has no separate maintenance-update timeline."
+    },
+    {
       "id": "monitor-history",
       "status": "unsupported",
       "source_method": "browser",
       "target_method": "none",
       "apply": "none",
       "verification": ["source-inventory", "rollback-plan"],
-      "notes": "Archive source history separately; this skill has no warranted historical-data import path."
+      "notes": "Archive source monitor check history separately; no warranted historical-check import path exists."
     },
     {
       "id": "alerting-integrations",

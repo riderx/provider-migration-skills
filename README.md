@@ -8,7 +8,7 @@ Each skill follows the same safety contract: capture the source inventory, norma
 
 | Skill | Covers |
 | --- | --- |
-| [hyperping-to-openstatus](skills/hyperping-to-openstatus/SKILL.md) | HTTP monitors, monitor assertions, regions, cadence, status pages, public monitor visibility, and response-time charts. |
+| [hyperping-to-openstatus](skills/hyperping-to-openstatus/SKILL.md) | HTTP monitors, monitor assertions, regions, cadence, status pages, public monitor visibility, response-time charts, public incident timelines, and maintenance windows. |
 | [cal-com-to-google-appointment-schedules](skills/cal-com-to-google-appointment-schedules/SKILL.md) | Booking event types, availability, booking links and embeds, Google Appointment Schedules, and a reversible cutover. |
 | [ionic-appflow-to-capgo](skills/ionic-appflow-to-capgo/SKILL.md) | Ionic Appflow Live Updates SDK/configuration, update strategies, deployment automation, and a new-native-binary cutover to Capgo. |
 | [capawesome-cloud-to-capgo-live-updates](skills/capawesome-cloud-to-capgo-live-updates/SKILL.md) | Capawesome Cloud Live Updates SDK/configuration, channel/rollout decisions, CI uploads, and device-level verification in Capgo. |
@@ -58,6 +58,7 @@ skills/
   <provider-pair>/
     SKILL.md           # concise activation instructions
     migration.json     # machine-readable capability contract
+    scripts/           # optional dependency-free migration helpers
     references/        # focused field maps and verification checklists
 research/
   ai-assisted-provider-migrations.md # source-labelled public evidence ledger
