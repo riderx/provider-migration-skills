@@ -58,6 +58,13 @@
       "documentation": ["https://plausible.io/docs/export-stats"]
     },
     {
+      "id": "google-analytics-4",
+      "name": "Google Analytics 4",
+      "domains": ["web-analytics"],
+      "methods": ["api", "browser", "repo"],
+      "documentation": ["https://developers.google.com/analytics/devguides/reporting/data/v1", "https://support.google.com/analytics/answer/9358801"]
+    },
+    {
       "id": "datafast",
       "name": "DataFast",
       "domains": ["web-analytics"],

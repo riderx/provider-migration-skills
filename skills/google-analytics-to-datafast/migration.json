@@ -1,0 +1,205 @@
+{
+  "version": 1,
+  "skill": "google-analytics-to-datafast",
+  "source": "google-analytics-4",
+  "target": "datafast",
+  "summary": "GA4 web-property cutover, explicit source-history retention, future tracker and goal rebuild, and verified reversible DataFast adoption.",
+  "capabilities": [
+    {
+      "id": "historical-ga4-analytics",
+      "status": "unsupported",
+      "source_method": "api",
+      "target_method": "none",
+      "apply": "none",
+      "verification": [
+        "source-inventory",
+        "rollback-plan"
+      ],
+      "notes": "DataFast's current FAQ says historical import is Plausible-only for now and Google Analytics is next. No documented GA4 CSV, Data API, or BigQuery ingestion path warrants importing historical traffic, events, revenue, attribution, audiences, or user data."
+    },
+    {
+      "id": "source-history-archive-and-baselines",
+      "status": "manual",
+      "source_method": "api",
+      "target_method": "manual",
+      "apply": "human",
+      "verification": [
+        "source-inventory",
+        "rollback-plan"
+      ],
+      "notes": "Required source-only control: archive approved GA4 aggregate reports, retention settings, and existing BigQuery evidence outside DataFast for source retention and fixed-date baselines. This does not create target history; a new GA4 BigQuery link does not provide retrospective backfill."
+    },
+    {
+      "id": "timezone-and-comparison-boundaries",
+      "status": "manual",
+      "source_method": "browser",
+      "target_method": "browser",
+      "apply": "human",
+      "verification": [
+        "source-inventory",
+        "target-readback",
+        "rollback-plan"
+      ],
+      "notes": "Record the GA4 reporting timezone and DataFast website timezone. They must match before production collection, or an owner must approve a documented conversion and fixed date-boundary convention for every comparison."
+    },
+    {
+      "id": "tracker-installation",
+      "status": "supported",
+      "source_method": "repo",
+      "target_method": "repo",
+      "apply": "agent",
+      "verification": [
+        "target-readback",
+        "public-surface",
+        "ci",
+        "rollback-plan"
+      ],
+      "notes": "Install the documented tracker only after an additive dry run. Client markup uses the approved DataFast trackingId (dfid_...), while dashboard/API read-back uses websiteId; preserve GA4 during parallel verification and make reruns idempotent by trackingId plus location."
+    },
+    {
+      "id": "tag-manager-and-cms-tracker-installation",
+      "status": "manual",
+      "source_method": "browser",
+      "target_method": "browser",
+      "apply": "human",
+      "verification": [
+        "target-readback",
+        "public-surface",
+        "rollback-plan"
+      ],
+      "notes": "DataFast documents Google Tag Manager and CMS integrations, but publication is human-owned. After the dry-run inventory, add one approved target tag; do not overwrite, disable, or remove the GA4 tag before acceptance."
+    },
+    {
+      "id": "events-key-events-and-custom-definitions",
+      "status": "manual",
+      "source_method": "browser",
+      "target_method": "repo",
+      "apply": "agent",
+      "verification": [
+        "source-inventory",
+        "target-readback",
+        "public-surface",
+        "rollback-plan"
+      ],
+      "notes": "Inspect GA4 event/key-event configuration and source instrumentation, then rebuild accepted future DataFast goals from a mapping ledger. Event names, custom definitions, and semantics are not a one-to-one migration."
+    },
+    {
+      "id": "server-side-measurement-and-user-identification",
+      "status": "manual",
+      "source_method": "repo",
+      "target_method": "repo",
+      "apply": "agent",
+      "verification": [
+        "source-inventory",
+        "target-readback",
+        "public-surface",
+        "rollback-plan"
+      ],
+      "notes": "Review server-side events, identity, and measurement behavior independently. Never copy GA Measurement Protocol secrets or historic identifiers; use documented target interfaces only after privacy and semantic approval."
+    },
+    {
+      "id": "funnels-explorations-reports-and-shares",
+      "status": "manual",
+      "source_method": "browser",
+      "target_method": "browser",
+      "apply": "human",
+      "verification": [
+        "target-readback",
+        "external-user",
+        "rollback-plan"
+      ],
+      "notes": "Rebuild only approved DataFast funnels, reports, and shares after reviewing their filters, stages, attribution, and intended audience. No documented cross-provider dashboard importer warrants an automatic copy."
+    },
+    {
+      "id": "search-console-integration",
+      "status": "manual",
+      "source_method": "browser",
+      "target_method": "browser",
+      "apply": "human",
+      "verification": [
+        "target-readback",
+        "external-user",
+        "rollback-plan"
+      ],
+      "notes": "Reconnect Google Search Console in the DataFast target only after the owner approves the Google authorization and matching verified property. Treat it as a fresh integration, not a copied source link."
+    },
+    {
+      "id": "google-ads-audiences-and-remarketing",
+      "status": "unsupported",
+      "source_method": "browser",
+      "target_method": "none",
+      "apply": "none",
+      "verification": [
+        "source-inventory",
+        "rollback-plan"
+      ],
+      "notes": "GA4 audiences, Google Ads links, remarketing lists, and advertising activation have no documented automatic DataFast target migration. Preserve and redesign them under a separately approved advertising plan."
+    },
+    {
+      "id": "payment-provider-dashboard-connection",
+      "status": "manual",
+      "source_method": "browser",
+      "target_method": "browser",
+      "apply": "human",
+      "verification": [
+        "target-readback",
+        "external-user",
+        "rollback-plan"
+      ],
+      "notes": "Connect an approved DataFast payment provider as a fresh owner-approved dashboard integration. Historical GA4 ecommerce, revenue, attribution, and financial records are not imported."
+    },
+    {
+      "id": "payment-api-and-checkout-metadata",
+      "status": "manual",
+      "source_method": "repo",
+      "target_method": "repo",
+      "apply": "agent",
+      "verification": [
+        "source-inventory",
+        "target-readback",
+        "public-surface",
+        "ci",
+        "external-user",
+        "rollback-plan"
+      ],
+      "notes": "Implement a DataFast Payment API or checkout-metadata integration only after financial, privacy, and semantic approval. Use a genuine target df_ key only where required, preserve idempotency, and never replay historic GA4 revenue or duplicate payment events."
+    },
+    {
+      "id": "privacy-consent-cross-domain-and-exclusions",
+      "status": "manual",
+      "source_method": "repo",
+      "target_method": "repo",
+      "apply": "human",
+      "verification": [
+        "public-surface",
+        "external-user",
+        "rollback-plan"
+      ],
+      "notes": "Cookie/cookieless mode, consent, cross-domain topology, referral/internal-traffic exclusions, proxy, and CSP are legal/product decisions. DataFast collection and attribution behavior can differ from GA4."
+    },
+    {
+      "id": "team-access-property-settings-and-billing",
+      "status": "manual",
+      "source_method": "browser",
+      "target_method": "browser",
+      "apply": "human",
+      "verification": [
+        "target-readback",
+        "rollback-plan"
+      ],
+      "notes": "Create target access, roles, subscriptions, and settings only with owner approval. Do not copy provider permissions, property settings, or billing state automatically."
+    },
+    {
+      "id": "optional-api-baselines",
+      "status": "manual",
+      "source_method": "api",
+      "target_method": "api",
+      "apply": "agent",
+      "verification": [
+        "source-inventory",
+        "target-readback"
+      ],
+      "notes": "Google Analytics Data API OAuth/service-account access and a target-restricted DataFast dft_ token can automate aggregate baselines and read-back. Use analytics:read for metrics; add settings:read, goals:read, or funnels:read only for those checks, and websites:read only to list/select the target. They are optional; reserve df_ website keys for genuine server-side operations."
+    }
+  ]
+}

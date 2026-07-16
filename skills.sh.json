@@ -7,6 +7,7 @@
       "description": "Skills for safe, verified transfers between SaaS providers.",
       "skills": [
         "hyperping-to-openstatus",
+        "google-analytics-to-datafast",
         "plausible-to-datafast",
         "cal-com-to-google-appointment-schedules",
         "ionic-appflow-to-capgo",

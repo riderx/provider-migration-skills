@@ -9,6 +9,7 @@ Each skill follows the same safety contract: capture the source inventory, norma
 | Skill | Covers |
 | --- | --- |
 | [hyperping-to-openstatus](skills/hyperping-to-openstatus/SKILL.md) | HTTP monitors, monitor assertions, regions, cadence, status pages, public monitor visibility, response-time charts, public incident timelines, and maintenance windows. |
+| [google-analytics-to-datafast](skills/google-analytics-to-datafast/SKILL.md) | Google Analytics 4 source-history retention, tracker and goal mapping, privacy/domain decisions, parallel verification, and reversible cutover to DataFast. |
 | [plausible-to-datafast](skills/plausible-to-datafast/SKILL.md) | Plausible full-export historical analytics import, tracking-script and custom-goal mapping, privacy/domain decisions, verification, and reversible cutover to DataFast. |
 | [cal-com-to-google-appointment-schedules](skills/cal-com-to-google-appointment-schedules/SKILL.md) | Booking event types, availability, booking links and embeds, Google Appointment Schedules, and a reversible cutover. |
 | [ionic-appflow-to-capgo](skills/ionic-appflow-to-capgo/SKILL.md) | Ionic Appflow Live Updates SDK/configuration, update strategies, deployment automation, and a new-native-binary cutover to Capgo. |
@@ -27,6 +28,7 @@ The [Skills CLI](https://www.skills.sh/docs/cli) is the standard installer. Repl
 ~~~sh
 npx skills add riderx/provider-migration-skills --list
 npx skills add riderx/provider-migration-skills --skill hyperping-to-openstatus
+npx skills add riderx/provider-migration-skills --skill google-analytics-to-datafast
 npx skills add riderx/provider-migration-skills --skill plausible-to-datafast
 npx skills add riderx/provider-migration-skills --skill cal-com-to-google-appointment-schedules
 npx skills add riderx/provider-migration-skills --skill ionic-appflow-to-capgo
