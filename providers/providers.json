@@ -65,11 +65,25 @@
       "documentation": ["https://developers.google.com/analytics/devguides/reporting/data/v1", "https://support.google.com/analytics/answer/9358801"]
     },
     {
+      "id": "google-workspace",
+      "name": "Google Workspace",
+      "domains": ["email-collaboration"],
+      "methods": ["api", "browser"],
+      "documentation": ["https://support.google.com/a/", "https://support.google.com/mail/answer/7126229", "https://support.google.com/vault/answer/7664657"]
+    },
+    {
       "id": "datafast",
       "name": "DataFast",
       "domains": ["web-analytics"],
       "methods": ["api", "browser", "cli", "repo"],
       "documentation": ["https://datafa.st/docs/import-from-plausible", "https://datafa.st/docs/cli-introduction"]
+    },
+    {
+      "id": "shipmail",
+      "name": "Shipmail",
+      "domains": ["email-collaboration"],
+      "methods": ["api", "browser"],
+      "documentation": ["https://shipmail.to/docs/guides/migrate-from-gmail", "https://shipmail.to/docs/features/mailbox-import", "https://shipmail.to/docs/guides/api-getting-started"]
     }
   ]
 }

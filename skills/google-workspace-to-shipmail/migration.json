@@ -1,0 +1,193 @@
+{
+  "version": 1,
+  "skill": "google-workspace-to-shipmail",
+  "source": "google-workspace",
+  "target": "shipmail",
+  "summary": "Custom-domain Google Workspace email cutover with duplicate-safe mailbox import, explicit manual topology and DNS work, source-compliance retention, and verified reversible Shipmail adoption.",
+  "capabilities": [
+    {
+      "id": "mailbox-history-and-labels",
+      "status": "supported",
+      "source_method": "browser",
+      "target_method": "browser",
+      "apply": "human",
+      "verification": [
+        "source-inventory",
+        "target-readback",
+        "external-user",
+        "rollback-plan"
+      ],
+      "notes": "Shipmail documents a Gmail/IMAP mailbox import that copies mail in the background, preserves folders/labels, read state, and dates, and skips duplicate messages on a safe rerun. It requires a user-approved app password and an import report review; Google labels become folders, spam/trash are opt-in, Starred/Important views are skipped, and messages over 50 MB are reported as skipped. Before acceptance, reconcile mail that reached Google after the MX boundary with a duplicate-safe re-import or documented manual resolution."
+    },
+    {
+      "id": "target-mailbox-provisioning",
+      "status": "supported",
+      "source_method": "browser",
+      "target_method": "api",
+      "apply": "agent",
+      "verification": [
+        "source-inventory",
+        "target-readback",
+        "rollback-plan"
+      ],
+      "notes": "After an owner approves the exact destination plan and account-wide Shipmail API access, an agent can create the approved domain/mailboxes idempotently by stable address and read them back. Supply each new target mailbox password only through an approved secret manager, never include it in logs or reports, and require the recipient to reset it before normal use. Dashboard creation remains the human fallback; no Google user, password, permission, or billing state is copied automatically."
+    },
+    {
+      "id": "contacts",
+      "status": "manual",
+      "source_method": "browser",
+      "target_method": "browser",
+      "apply": "human",
+      "verification": [
+        "source-inventory",
+        "target-readback",
+        "external-user"
+      ],
+      "notes": "Export approved Google Contacts as a VCF file and upload it during Shipmail mailbox import. Shipmail documents file import, not a direct Google Contacts OAuth synchronization, so owners must reconcile counts and accepted fields manually."
+    },
+    {
+      "id": "calendars",
+      "status": "manual",
+      "source_method": "browser",
+      "target_method": "browser",
+      "apply": "human",
+      "verification": [
+        "source-inventory",
+        "target-readback",
+        "external-user",
+        "rollback-plan"
+      ],
+      "notes": "Export each approved Google Calendar through Google Takeout as ICS and import it in Shipmail Calendar. Recurring events and duplicate-safe reimport are documented, but shared-calendar ACLs, resource calendars, subscriptions, Google Meet behavior, and automations need separate manual decisions and tests."
+    },
+    {
+      "id": "aliases-forwarding-and-catch-all",
+      "status": "manual",
+      "source_method": "browser",
+      "target_method": "browser",
+      "apply": "human",
+      "verification": [
+        "source-inventory",
+        "target-readback",
+        "external-user",
+        "rollback-plan"
+      ],
+      "notes": "Inventory and recreate aliases, forwarding, and catch-all manually. Shipmail aliases deliver to an existing mailbox, forwarding destinations require confirmation and have target limits, and only one catch-all mailbox can be active per domain. Remove Google forwarding only after verified cutover to prevent loops."
+    },
+    {
+      "id": "groups-and-shared-mailboxes",
+      "status": "manual",
+      "source_method": "browser",
+      "target_method": "browser",
+      "apply": "human",
+      "verification": [
+        "source-inventory",
+        "target-readback",
+        "external-user",
+        "rollback-plan"
+      ],
+      "notes": "Redesign approved Google Group and delegated-mail workflows as Shipmail shared mailboxes with explicit teammate invitations and access. No documented importer transfers Google Group membership, permissions, delivery rules, or moderation semantics."
+    },
+    {
+      "id": "filters-auto-replies-and-client-settings",
+      "status": "manual",
+      "source_method": "browser",
+      "target_method": "browser",
+      "apply": "human",
+      "verification": [
+        "source-inventory",
+        "target-readback",
+        "external-user"
+      ],
+      "notes": "Gmail filters, signatures, auto-replies, spam choices, mailbox passwords/2FA, and client configuration must be rebuilt and tested manually. Labels move with supported mail import, but source rules are not a one-to-one target migration."
+    },
+    {
+      "id": "domain-mx-and-email-authentication",
+      "status": "manual",
+      "source_method": "browser",
+      "target_method": "browser",
+      "apply": "human",
+      "verification": [
+        "target-readback",
+        "public-surface",
+        "external-user",
+        "rollback-plan"
+      ],
+      "notes": "Keep the domain at its registrar, create target mailboxes first, lower MX TTL before cutover, then apply Shipmail MX, one merged SPF record, target DKIM, and an owner-approved DMARC policy. DNS authority and the delivery-risk decision remain human-owned."
+    },
+    {
+      "id": "external-senders-and-public-addresses",
+      "status": "manual",
+      "source_method": "browser",
+      "target_method": "browser",
+      "apply": "human",
+      "verification": [
+        "source-inventory",
+        "public-surface",
+        "external-user",
+        "rollback-plan"
+      ],
+      "notes": "Re-authorize external senders, SMTP/IMAP clients, support systems, forms, and public address references from an inventory. Preserve all authorized senders in the single SPF plan and prove real inbound/outbound delivery; do not infer these integrations work from target mailbox creation."
+    },
+    {
+      "id": "api-automation-and-credential-handling",
+      "status": "manual",
+      "source_method": "manual",
+      "target_method": "api",
+      "apply": "agent",
+      "verification": [
+        "target-readback",
+        "rollback-plan"
+      ],
+      "notes": "Browser migration requires no provider API key. Optional target API automation begins only after an owner creates and approves an account-wide Shipmail key for the precise operations. Store it outside the repository, use idempotent writes and read-back, hand any new target mailbox password only through an approved secret manager for a recipient-controlled reset, and never capture Google app passwords, source OAuth material, message exports, or personal data in reports."
+    },
+    {
+      "id": "source-archive-retention-and-vault",
+      "status": "manual",
+      "source_method": "browser",
+      "target_method": "manual",
+      "apply": "human",
+      "verification": [
+        "source-inventory",
+        "rollback-plan"
+      ],
+      "notes": "This is a mandatory source-only control. Preserve required Google Workspace mail, Vault/eDiscovery exports, retention/hold evidence, audit records, and owner access under legal/compliance direction before deprovisioning. No documented Shipmail path imports or replaces those controls."
+    },
+    {
+      "id": "workspace-productivity-and-admin-services",
+      "status": "unsupported",
+      "source_method": "browser",
+      "target_method": "none",
+      "apply": "none",
+      "verification": [
+        "source-inventory",
+        "rollback-plan"
+      ],
+      "notes": "Shipmail is not a documented migration target for Google Drive, Shared Drives, Docs, Sheets, Slides, Meet, Chat, Google Group semantics, SSO/SCIM, device management, OAuth apps, admin policies, Vault, eDiscovery, DLP, audit logs, or compliance controls. Retain or migrate each workload under a separate accepted plan."
+    },
+    {
+      "id": "gmail-com-addresses",
+      "status": "not-applicable",
+      "source_method": "browser",
+      "target_method": "none",
+      "apply": "none",
+      "verification": [
+        "source-inventory",
+        "rollback-plan"
+      ],
+      "notes": "A personal @gmail.com address remains a Google address and is not transferable as a Shipmail custom-domain mailbox. Keep it at Google or plan a separate forwarding and communication transition without claiming address ownership migrated."
+    },
+    {
+      "id": "billing-access-and-deprovisioning",
+      "status": "manual",
+      "source_method": "browser",
+      "target_method": "browser",
+      "apply": "human",
+      "verification": [
+        "target-readback",
+        "external-user",
+        "rollback-plan"
+      ],
+      "notes": "Create approved target access and billing separately, retain source billing and recovery access through the soak period, and obtain owner plus compliance approval before cancelling Google Workspace, deleting users, revoking credentials, or discarding archives."
+    }
+  ]
+}
